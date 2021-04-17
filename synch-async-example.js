@@ -1,4 +1,4 @@
-//Read the code sample to get better idea of 2 pattern
+//Read the code sample to get better idea of 3 pattern
 //Callback, Promise, Async await
 
 //Synchronous programming example one complete then go for another ang progress similarly
