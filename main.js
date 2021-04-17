@@ -1,9 +1,19 @@
+//Homework
+
+/*----------------------------------------------------------------
+1.  Deal all the asynchronous action in promise pattern after watching and practicing thr youtube series properly
+  For demonstration I converted get and post method
+2. Deal all the asynchronous action in Async await pattern after watching and practicing thr youtube series properly
+----------------------------------------------------------------*/
+
 const http = {
-  get(url, callback) {
-    fetch(url)
-      .then((response) => response.json())
-      .then((data) => callback(data.splice(0, 20)))
-      .catch((err) => callback(null, err))
+  get(url) {
+    return new Promise((resolve, reject) => {
+      fetch(url)
+        .then((response) => response.json())
+        .then((data) => resolve(data.splice(0, 20)))
+        .catch((err) => reject(new Error('Problem in getting data')))
+    })
   },
   getOne(url, callback) {
     fetch(url)
@@ -11,17 +21,19 @@ const http = {
       .then((data) => callback(data))
       .catch((err) => callback(null, err))
   },
-  post(url, data, callback) {
-    fetch(url, {
-      method: 'POST',
-      body: JSON.stringify(data),
-      headers: {
-        'Content-Type': 'application/json'
-      }
+  post(url, data) {
+    return new Promise((resolve, reject) => {
+      fetch(url, {
+        method: 'POST',
+        body: JSON.stringify(data),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+        .then((response) => response.json())
+        .then((data) => resolve(data))
+        .catch((err) => reject(new Error('problem in adding data')))
     })
-      .then((response) => response.json())
-      .then((data) => callback(data))
-      .catch((err) => callback(null, err))
   },
   update(url, data, callback) {
     fetch(url, {
@@ -46,9 +58,10 @@ const http = {
 }
 
 function getTodos() {
-  http.get('https://jsonplaceholder.typicode.com/todos', function (data) {
-    console.log(data)
-  })
+  http
+    .get('https://jsonplaceholder.typicode.com/todos')
+    .then((data) => console.log(data))
+    .catch((err) => console.log(err))
 }
 
 function getTodo(id) {
@@ -65,21 +78,19 @@ function getTodo(id) {
 }
 
 function addTodo() {
-  http.post(
-    'https://jsonplaceholder.typicode.com/todos',
-    {
+  http
+    .post('https://jsonplaceholder.typicode.com/todos', {
       userId: 1,
       title: 'walking Around',
       completed: true
-    },
-    function (data, err) {
-      if (err) {
-        console.error('err', err)
-      }
-      console.log(data)
-      getTodo(data.id)
-    }
-  )
+    })
+    .then((data) => {
+      //one async result is dependent on other
+      //after adding todos we want to add todo
+      console.log(data, data.id)
+      //getTodo(data.id) produce error as there is no id:201
+    })
+    .catch((err) => console.log(err))
 }
 
 function updateTodo() {

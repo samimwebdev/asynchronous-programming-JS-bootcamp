@@ -1,3 +1,6 @@
+//Read the code sample to get better idea of 2 pattern
+//Callback, Promise, Async await
+
 //Synchronous programming example one complete then go for another ang progress similarly
 //javascript is single threaded
 //javascript is single threaded and by default asynchronous in nature
